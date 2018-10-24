@@ -13,8 +13,7 @@ public class Estructura extends Carta {
 
     private int escudo;
 
-    public Estructura(String nombre) {
-        super(nombre);
+    public Estructura() {
         this.escudo = generator.nextInt(6) + 1;
         this.ataque = ataqueBase;
         this.defensa = defensaBase * escudo;

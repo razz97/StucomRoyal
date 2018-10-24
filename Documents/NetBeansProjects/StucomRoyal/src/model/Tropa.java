@@ -13,8 +13,7 @@ public class Tropa extends Carta {
     
     private final int fuerza;
 
-    public Tropa(String nombre) {
-        super(nombre);
+    public Tropa() {
         this.fuerza = generator.nextInt(6) + 1;
         this.ataque = ataqueBase * fuerza;
         this.defensa = defensaBase;

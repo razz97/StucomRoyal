@@ -53,17 +53,13 @@ public class Jugador implements Comparable<Jugador> {
         if (cartas.size() >= 6) {
             throw new Exception("El jugador ya tiene 6 cartas.");
         }
-        if (cartas.contains(carta)) {
-            throw new Exception("El jugador ya tiene esta carta.");
-        }
         cartas.add(carta);
     }
 
     public void remove(Carta carta) throws Exception {
-        if (!cartas.contains(carta)) {
+        if (!cartas.remove(carta)) {
             throw new Exception("El jugador no tiene esta carta.");
         }
-        cartas.remove(carta);
     }
     
     public void ganar() {
@@ -102,6 +98,11 @@ public class Jugador implements Comparable<Jugador> {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Nombre: " + username + ", Trofeos: " + trofeos;
     }
     
     

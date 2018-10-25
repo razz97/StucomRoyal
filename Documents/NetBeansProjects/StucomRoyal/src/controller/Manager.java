@@ -27,12 +27,10 @@ public class Manager {
     private Set<Jugador> jugadores = new HashSet<>();
     private List<Carta> cartas = new ArrayList<>();
     private List<String> nombresCartaPorDefecto = new ArrayList<>();
-    private List<String> nombresJugadorPorDefecto = new ArrayList<>();
     private Random genRandom = new Random();
 
     private Manager() {
         genNombresCartaPorDefecto();
-        genNombresJugadorPorDefecto();
     }
 
     public static Manager getInstancia() {
@@ -46,7 +44,7 @@ public class Manager {
         genCartas(3, "Hechizo");
         genCartas(3, "Estructura");
         genCartas(3, "Tropa");
-        genJugadores(5);
+        genJugadoresPorDefecto("0");
     }
 
     private void genNombresCartaPorDefecto() {
@@ -60,15 +58,15 @@ public class Manager {
         nombresCartaPorDefecto.add("Bruja");
     }
 
-    private void genNombresJugadorPorDefecto() {
-        nombresCartaPorDefecto.add("Juan");
-        nombresCartaPorDefecto.add("Alex");
-        nombresCartaPorDefecto.add("Victor");
-        nombresCartaPorDefecto.add("Pol");
-        nombresCartaPorDefecto.add("Steven");
-        nombresCartaPorDefecto.add("Nico");
-        nombresCartaPorDefecto.add("Javi");
-        nombresCartaPorDefecto.add("Darren");
+    private void genJugadoresPorDefecto(String contrasena) {
+        jugadores.add(new Jugador("Juan", contrasena));
+        jugadores.add(new Jugador("Alex", contrasena));
+        jugadores.add(new Jugador("Victor", contrasena));
+        jugadores.add(new Jugador("Pol", contrasena));
+        jugadores.add(new Jugador("Steven", contrasena));
+        jugadores.add(new Jugador("Nico", contrasena));
+        jugadores.add(new Jugador("Javi", contrasena));
+        jugadores.add(new Jugador("Darren", contrasena));
     }
 
     public void genCartas(int cantidad, String tipo) {
@@ -79,20 +77,12 @@ public class Manager {
                 case "hechizo":
                     cartas.add(new Hechizo(nombresCartaPorDefecto.get(random)));
                     break;
-                case "ropa":
+                case "tropa":
                     cartas.add(new Tropa(nombresCartaPorDefecto.get(random)));
                     break;
                 case "estructura":
                     cartas.add(new Estructura(nombresCartaPorDefecto.get(random)));
             }
-        }
-    }
-
-    public void genJugadores(int cantidad) {
-        int random;
-        for (int i = 0; i < cantidad; i++) {
-            random = genRandom.nextInt(nombresJugadorPorDefecto.size());
-            jugadores.add(new Jugador(nombresJugadorPorDefecto.get(random), "0"));
         }
     }
 
@@ -105,24 +95,25 @@ public class Manager {
     }
 
     public Jugador autentificarJugador() {
-        Jugador jugador = null;
+        Jugador jugador;
         String user;
         String pass;
-        boolean error;
+        boolean encontrado = false;
         do {
             user = PideInput.pedirCadena("Usuario: ");
             pass = PideInput.pedirCadena("Contrasena: ");
-            error = !jugadores.contains(new Jugador(user,pass));
-            if (error) {
+            jugador = new Jugador(user, pass);
+            for (Jugador j : jugadores) {
+                if (jugador.equals(j)) {
+                    jugador = j;
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
                 System.err.println("Contraseña o usuario incorrectos!");
             }
-        } while (error);
-        for (Jugador j: jugadores) {
-            if (j.getUsername().equals(user) && j.getPassword().equals(pass)) {
-                return jugador;
-            }
-        }
-        return null;
+        } while (!encontrado);
+        return jugador;
     }
 
 }

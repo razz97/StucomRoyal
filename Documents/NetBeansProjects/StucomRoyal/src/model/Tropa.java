@@ -10,13 +10,19 @@ package model;
  * @author alex_bou
  */
 public class Tropa extends Carta {
-    
+
     private final int fuerza;
 
-    public Tropa() {
+    public Tropa(String nombre) {
+        super(nombre);
         this.fuerza = generator.nextInt(6) + 1;
         this.ataque = ataqueBase * fuerza;
         this.defensa = defensaBase;
     }
-    
+
+    @Override
+    public String toString() {
+        return super.toString() + "; Fuerza: " + fuerza;
+    }
+
 }

@@ -13,9 +13,16 @@ public class Hechizo extends Carta {
     
     private int alcance;
 
-    public Hechizo() {
+    public Hechizo(String nombre) {
+        super(nombre);
         this.alcance = generator.nextInt(11) + 5;
         this.ataque = ataqueBase + alcance;
         this.defensa = defensaBase + alcance;
     }
+    
+        @Override
+    public String toString() {
+        return super.toString() + "; Alcance: " + alcance;
+    }
+    
 }

@@ -6,6 +6,7 @@ package main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  *
@@ -28,26 +29,6 @@ public class PideInput {
             }
         } while (cadena.equals(""));
         return cadena;
-    }
-
-    public static double pedirDouble(String texto) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        double num = 0;
-        boolean error;
-        do {
-            try {
-                System.out.println(texto);
-                num = Double.parseDouble(br.readLine());
-                error = false;
-            } catch (IOException ex) {
-                System.out.println("Error de entrada / salida.");
-                error = true;
-            } catch (NumberFormatException ex) {
-                System.out.println("Debes introducir un número.");
-                error = true;
-            }
-        } while (error);
-        return num;
     }
 
     public static int pedirEntero(String texto) {
@@ -93,13 +74,14 @@ public class PideInput {
         return num;
     }
 
-    // Método que indica si un String es un entero o no
-    public static boolean esEntero(String numero) {
-        try {
-            Integer.parseInt(numero);
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
+    public static int pedirIndice(String pregunta,List lista, boolean salirConZero) {
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.println((i + 1) + ". " + lista.get(i).toString());
         }
+        if (salirConZero) {
+            System.out.println("0. Salir.");
+        }
+        return pedirEntero(pregunta, salirConZero ? 0 : 1, lista.size()) - 1;
     }
+    
 }

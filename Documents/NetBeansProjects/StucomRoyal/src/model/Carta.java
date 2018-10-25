@@ -30,13 +30,6 @@ public abstract class Carta {
         this.vida = generator.nextInt(101) + 1;
     }
 
-    public Carta() {
-        this.ataqueBase = generator.nextInt(51) + 1;
-        this.defensaBase = generator.nextInt(51) + 1;
-        this.elixir = generator.nextInt(6) + 1;
-        this.vida = generator.nextInt(101) + 1;
-    }
-
     public String getNombre() {
         return nombre;
     }
@@ -67,13 +60,9 @@ public abstract class Carta {
         return defensa;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ": " + nombre;
+        return "Carta tipo " + getClass().getSimpleName() + "; Nombre: " + nombre + "; Elixir: " + elixir + "; Vida: " + vida + "; Ataque: " + ataqueBase + "; Defensa: " + defensaBase;
     }
     
 

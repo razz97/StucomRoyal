@@ -12,8 +12,8 @@ import java.util.Random;
  * @author alex_bou
  */
 public abstract class Carta {
-    
-    private final String nombre;
+
+    private String nombre;
     protected final int ataqueBase;
     protected final int defensaBase;
     protected int elixir;
@@ -24,6 +24,13 @@ public abstract class Carta {
 
     public Carta(String nombre) {
         this.nombre = nombre;
+        this.ataqueBase = generator.nextInt(51) + 1;
+        this.defensaBase = generator.nextInt(51) + 1;
+        this.elixir = generator.nextInt(6) + 1;
+        this.vida = generator.nextInt(101) + 1;
+    }
+
+    public Carta() {
         this.ataqueBase = generator.nextInt(51) + 1;
         this.defensaBase = generator.nextInt(51) + 1;
         this.elixir = generator.nextInt(6) + 1;
@@ -49,15 +56,25 @@ public abstract class Carta {
     public int getVida() {
         return vida;
     }
-    
+
     public int atacar() {
         elixir--;
         return ataque;
     }
-    
+
     public int defender(int ataque) {
         vida -= ataque;
         return defensa;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + nombre;
+    }
     
+
 }

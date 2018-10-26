@@ -5,9 +5,7 @@
  */
 package model;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -112,6 +110,4 @@ public class Jugador implements Comparable<Jugador> {
         return "Nombre: " + username + ", Trofeos: " + trofeos;
     }
     
-    
-
 }

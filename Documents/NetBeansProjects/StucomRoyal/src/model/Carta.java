@@ -74,7 +74,4 @@ public abstract class Carta implements Cloneable, Comparable<Carta> {
     public int compareTo(Carta o) {
         return o.getElixir() - elixir;
     }
-    
-    
-
 }

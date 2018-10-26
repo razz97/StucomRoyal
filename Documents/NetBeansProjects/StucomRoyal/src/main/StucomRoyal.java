@@ -6,10 +6,8 @@
 package main;
 
 import controller.Manager;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import model.Baraja;
 import model.Carta;
 import model.Jugador;
@@ -21,7 +19,7 @@ import model.Jugador;
 public class StucomRoyal {
 
     private static Manager manager = Manager.getInstancia();
-    private static final int MAX_ELIXIR = 10; 
+    private static final int MAX_ELIXIR = 10;
 
     public static void main(String[] args) {
 
@@ -78,16 +76,28 @@ public class StucomRoyal {
             System.out.println("Login primer usuario");
             Jugador jugador1 = manager.autentificarJugadorTresCartas();
             Baraja baraja1 = getCartasLegales(jugador1);
-//            System.out.println("Login segundo usuario");
-//            Jugador jugador2 = manager.autentificarJugadorTresCartas();
-//            Baraja baraja2 = getCartasLegales(jugador2);
+            System.out.println("Login segundo usuario");
+            Jugador jugador2 = manager.autentificarJugadorTresCartas();
+            Baraja baraja2 = getCartasLegales(jugador2);
+            if (jugador1.isJugadorPrimero(jugador2)) {
+                ejecutarTurno(baraja1, baraja2);
+                ejecutarTurno(baraja2, baraja1);
+            } else {
+                ejecutarTurno(baraja2, baraja1);
+                ejecutarTurno(baraja1, baraja2);
+            }
             
         } else {
             System.err.println("No hay dos jugadores con al menos tres cartas.");
         }
 
     }
-    
+
+    private static void ejecutarTurno(Baraja atacante, Baraja defensor) {
+        atacante.remove(0);
+        System.out.println("");
+    }
+
     private static Baraja getCartasLegales(Jugador jugador) {
         Baraja barajaClon = jugador.getCartas().clone();
         Baraja barajaJugable = new Baraja();
@@ -104,7 +114,7 @@ public class StucomRoyal {
             } else {
                 System.err.println("No puedes escoger esta carta, maximo 10 de elixir permitido");
             }
-        } while(barajaJugable.size() < 3);
+        } while (barajaJugable.size() < 3);
         return barajaJugable;
     }
 

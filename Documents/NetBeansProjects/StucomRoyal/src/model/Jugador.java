@@ -7,6 +7,7 @@ package model;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  *
@@ -23,16 +24,16 @@ public class Jugador implements Comparable<Jugador> {
         this.username = username;
         this.password = password;
     }
-    
+
     public boolean canPlay() {
-        if (cartas.size() <= 3) {
+        if (cartas.size() < 3) {
             return false;
         }
-        Collections.sort(cartas);        
+        Collections.sort(cartas);
         int minElixir = cartas.subList(0, 3).stream().mapToInt(c -> c.getElixir()).sum();
         return minElixir <= 10;
     }
-    
+
     public String getUsername() {
         return username;
     }
@@ -69,13 +70,21 @@ public class Jugador implements Comparable<Jugador> {
             throw new Exception("El jugador no tiene esta carta.");
         }
     }
-    
+
     public void ganar() {
         trofeos++;
     }
     
+    public boolean isJugadorPrimero(Jugador j) {
+        return compareTo(j) > 0;
+    }
+
     @Override
     public int compareTo(Jugador o) {
+        if (trofeos == o.getTrofeos()) {
+            return (new Random()).nextInt();
+        }
+
         return trofeos - o.getTrofeos();
     }
 
@@ -109,5 +118,5 @@ public class Jugador implements Comparable<Jugador> {
     public String toString() {
         return "Nombre: " + username + ", Trofeos: " + trofeos;
     }
-    
+
 }

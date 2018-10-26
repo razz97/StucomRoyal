@@ -24,7 +24,7 @@ import model.Tropa;
 public class Manager {
 
     private static Manager instancia;
-    private Set<Jugador> jugadores = new HashSet<>();
+    private List<Jugador> jugadores = new ArrayList<>();
     private List<Carta> cartas = new ArrayList<>();
     private List<String> nombresCartaPorDefecto = new ArrayList<>();
     private Random genRandom = new Random();
@@ -90,7 +90,7 @@ public class Manager {
         return cartas;
     }
 
-    public Set<Jugador> getJugadores() {
+    public List<Jugador> getJugadores() {
         return jugadores;
     }
 
@@ -114,6 +114,23 @@ public class Manager {
             }
         } while (!encontrado);
         return jugador;
+    }
+
+    public Jugador autentificarJugadorTresCartas() {
+        Jugador jugador;
+        do {
+            jugador = autentificarJugador();
+            if (!jugador.canPlay()) {
+                System.err.println("El jugador debe tener al menos tres cartas con su suma de elixir de 10 maximo.");
+            }
+        } while (!jugador.canPlay());
+        return jugador;
+    }
+
+    public boolean dosJugadoresPuedenJugar() {
+        return jugadores.stream()
+                .filter(j -> j.canPlay())
+                .count() >= 2;
     }
 
 }

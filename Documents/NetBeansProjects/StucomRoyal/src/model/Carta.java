@@ -11,7 +11,7 @@ import java.util.Random;
  *
  * @author alex_bou
  */
-public abstract class Carta {
+public abstract class Carta implements Cloneable, Comparable<Carta> {
 
     private String nombre;
     protected final int ataqueBase;
@@ -64,6 +64,17 @@ public abstract class Carta {
     public String toString() {
         return "Carta tipo " + getClass().getSimpleName() + "; Nombre: " + nombre + "; Elixir: " + elixir + "; Vida: " + vida + "; Ataque: " + ataqueBase + "; Defensa: " + defensaBase;
     }
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public int compareTo(Carta o) {
+        return o.getElixir() - elixir;
+    }
+    
     
 
 }

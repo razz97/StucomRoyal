@@ -6,6 +6,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,11 +19,20 @@ public class Jugador implements Comparable<Jugador> {
     private String username;
     private String password;
     private int trofeos = 0;
-    private List<Carta> cartas = new ArrayList<Carta>();
+    private Baraja cartas = new Baraja();
 
     public Jugador(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+    
+    public boolean canPlay() {
+        if (cartas.size() <= 3) {
+            return false;
+        }
+        Collections.sort(cartas);        
+        int minElixir = cartas.subList(0, 3).stream().mapToInt(c -> c.getElixir()).sum();
+        return minElixir <= 10;
     }
     
     public String getUsername() {
@@ -45,7 +55,7 @@ public class Jugador implements Comparable<Jugador> {
         return trofeos;
     }
 
-    public List<Carta> getCartas() {
+    public Baraja getCartas() {
         return cartas;
     }
 
@@ -94,10 +104,7 @@ public class Jugador implements Comparable<Jugador> {
         if (!Objects.equals(this.username, other.username)) {
             return false;
         }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.password, other.password);
     }
 
     @Override

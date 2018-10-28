@@ -15,10 +15,10 @@ import java.util.Random;
  */
 public class Jugador implements Comparable<Jugador> {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
     private int trofeos = 0;
-    private Baraja cartas = new Baraja();
+    private final Baraja cartas = new Baraja();
 
     public Jugador(String username, String password) {
         this.username = username;
@@ -30,7 +30,7 @@ public class Jugador implements Comparable<Jugador> {
             return false;
         }
         Collections.sort(cartas);
-        int minElixir = cartas.subList(0, 3).stream().mapToInt(c -> c.getElixir()).sum();
+        int minElixir = cartas.subList(0, 3).stream().mapToInt(Carta::getElixir).sum();
         return minElixir <= 10;
     }
 
@@ -38,16 +38,8 @@ public class Jugador implements Comparable<Jugador> {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public int getTrofeos() {
@@ -65,13 +57,11 @@ public class Jugador implements Comparable<Jugador> {
         cartas.add(carta);
     }
 
-    public void remove(Carta carta) throws Exception {
-        if (!cartas.remove(carta)) {
-            throw new Exception("El jugador no tiene esta carta.");
-        }
-    }
-
     public void ganar() {
+        trofeos += 5;
+    }
+    
+    public void perder() {
         trofeos++;
     }
     
@@ -84,8 +74,7 @@ public class Jugador implements Comparable<Jugador> {
         if (trofeos == o.getTrofeos()) {
             return (new Random()).nextInt();
         }
-
-        return trofeos - o.getTrofeos();
+        return o.getTrofeos() - trofeos;
     }
 
     @Override
@@ -108,7 +97,7 @@ public class Jugador implements Comparable<Jugador> {
             return false;
         }
         final Jugador other = (Jugador) obj;
-        if (!Objects.equals(this.username, other.username)) {
+        if (!this.username.equalsIgnoreCase(other.username)) {
             return false;
         }
         return Objects.equals(this.password, other.password);

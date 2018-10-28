@@ -50,21 +50,40 @@ public abstract class Carta implements Cloneable, Comparable<Carta> {
         return vida;
     }
 
-    public int atacar() {
-        elixir--;
+    public int getAtaque() {
         return ataque;
     }
 
-    public int defender(int ataque) {
-        vida -= ataque;
+    public int getDefensa() {
         return defensa;
+    }
+
+    public int defender(int ataque) {
+        int dano = ataque - defensa;
+        if (dano > 0) {
+            vida -= dano;
+        } else {
+            return 0;
+        }
+        return dano;
+    }
+
+    public String atacar(Carta c) {
+        String result = nombre + " (Ataque: " + ataqueBase + ") ataca a " + c.getStatsDef();
+        result += " " + c.getNombre() + " pierde " + c.defender(ataque) + " de vida ";
+        result += c.getVida() > 0 ? "y se queda con " + c.getVida() + " puntos de vida!" : " y muere!";
+        return result;
+    }
+
+    public String getStatsDef() {
+        return nombre + " (Defensa: " + defensaBase + ", Vida: " + vida + ")";
     }
 
     @Override
     public String toString() {
         return "Carta tipo " + getClass().getSimpleName() + "; Nombre: " + nombre + "; Elixir: " + elixir + "; Vida: " + vida + "; Ataque: " + ataqueBase + "; Defensa: " + defensaBase;
     }
-    
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
@@ -72,6 +91,6 @@ public abstract class Carta implements Cloneable, Comparable<Carta> {
 
     @Override
     public int compareTo(Carta o) {
-        return o.getElixir() - elixir;
+        return elixir - o.getElixir();
     }
 }

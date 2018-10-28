@@ -76,7 +76,7 @@ public class PideInput {
 
     public static int pedirIndice(String pregunta,List lista, boolean salirConZero) {
         for (int i = 0; i < lista.size(); i++) {
-            System.out.println((i + 1) + ". " + lista.get(i).toString());
+            System.out.println((i + 1) + ". " + lista.get(i));
         }
         if (salirConZero) {
             System.out.println("0. Salir.");

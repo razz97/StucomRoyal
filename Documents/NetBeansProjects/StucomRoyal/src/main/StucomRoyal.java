@@ -18,43 +18,45 @@ import model.Jugador;
  */
 public class StucomRoyal {
 
-    private static Manager manager = Manager.getInstancia();
+    private static final Manager MANAGER = Manager.getInstancia();
     private static final int MAX_ELIXIR = 10;
 
     public static void main(String[] args) {
-
-        manager.genData();
-
-        manager.getJugadores().forEach(x -> System.out.println(x + "; Contrasena: " + x.getPassword()));
-
-        int opcion = -1;
-
+        // Gonzalo esto es para que veas los usuarios creados con sus contraseñas.
+        MANAGER.getJugadores().stream()
+                .map(j -> j + "; Contrasena: " + j.getPassword())
+                .forEach(System.out::println);
+        int opcion;
         do {
-            System.out.println("1. Conseguir cartas \n"
-                    + "2. Batalla \n"
-                    + "3. Ranking.\n"
+            System.out.println("1. Ver perfil jugador\n"
+                    + "2. Conseguir cartas \n"
+                    + "3. Batalla \n"
+                    + "4. Ranking.\n"
                     + "0. Salir.");
-            opcion = PideInput.pedirEntero("Selecciona una opcion: ", 0, 3);
+            opcion = PideInput.pedirEntero("Selecciona una opcion: ", 0, 4);
             switch (opcion) {
                 case 1:
-                    conseguirCartas();
+                    Jugador jugador = MANAGER.authJugador(j -> true, "Datos incorrectos");
+                    System.out.println(jugador + "\n" + jugador.getCartas());
                     break;
                 case 2:
-                    empezarBatalla();
+                    conseguirCartas();
                     break;
                 case 3:
+                    empezarBatalla();
+                    break;
+                case 4:
                     mostrarRanking();
                     break;
                 case 0:
                     System.out.println("Hasta pronto!");
-                    break;
             }
         } while (opcion != 0);
     }
 
     private static void conseguirCartas() {
-        List<Carta> cartas = manager.getCartas();
-        Jugador jugador = manager.autentificarJugador();
+        List<Carta> cartas = MANAGER.getCartas();
+        Jugador jugador = MANAGER.authJugador(j -> true, "Datos incorrectos");
         int option;
         do {
             option = PideInput.pedirIndice("Selecciona una carta: ", cartas, true);
@@ -62,6 +64,7 @@ public class StucomRoyal {
                 try {
                     jugador.add(cartas.get(option));
                     cartas.remove(option);
+                    if (cartas.size() < 3) MANAGER.genCartas(8);
                     System.out.println("Carta anadida correctamente.");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
@@ -72,42 +75,53 @@ public class StucomRoyal {
     }
 
     private static void empezarBatalla() {
-        if (manager.dosJugadoresPuedenJugar()) {
+        if (MANAGER.dosJugadoresPuedenJugar()) {
             System.out.println("Login primer usuario");
-            Jugador jugador1 = manager.autentificarJugadorTresCartas();
+            Jugador jugador1 = MANAGER.authJugador(Jugador::canPlay,"Datos incorrectos o el jugador no puede jugar");
             Baraja baraja1 = getCartasLegales(jugador1);
             System.out.println("Login segundo usuario");
-            Jugador jugador2 = manager.autentificarJugadorTresCartas();
+            Jugador jugador2 = MANAGER.authJugador(Jugador::canPlay,"Datos incorrectos o el jugador no puede jugar");
             Baraja baraja2 = getCartasLegales(jugador2);
             if (jugador1.isJugadorPrimero(jugador2)) {
-                ejecutarTurno(baraja1, baraja2);
-                ejecutarTurno(baraja2, baraja1);
+                System.out.println(jugador1.getUsername() + " tira primero.");
+                ejecutarBatalla(baraja1, baraja2);
             } else {
-                ejecutarTurno(baraja2, baraja1);
-                ejecutarTurno(baraja1, baraja2);
+                System.out.println(jugador2.getUsername() + " tira primero.");
+                ejecutarBatalla(baraja2, baraja1);
             }
-            
+            if (baraja1.masVidaQue(baraja2)) {
+                System.out.println(jugador1.getUsername() + " ha ganado! (" 
+                        + baraja1.getVida() +"-" + baraja2.getVida() + ")");
+                jugador1.ganar();
+            } else {
+                System.out.println(jugador2.getUsername() + " ha ganado! (" 
+                        + baraja2.getVida() +"," + baraja1.getVida() + ")");
+                jugador2.ganar();
+            }
         } else {
-            System.err.println("No hay dos jugadores con al menos tres cartas.");
+            System.err.println("No hay dos jugadores que puedan jugar.");
         }
 
     }
 
-    private static void ejecutarTurno(Baraja atacante, Baraja defensor) {
-        atacante.remove(0);
-        System.out.println("");
+    private static void ejecutarBatalla(Baraja primero, Baraja segundo) {
+        for (int i = 0; i < 3; i++) 
+            System.out.println(primero.get(i).atacar(segundo.get(i)));
+        
+        System.out.println("Turno del segundo jugador.");
+        for (int i = 0; i < 3; i++) 
+            System.out.println(segundo.get(i).atacar(primero.get(i)));
     }
 
     private static Baraja getCartasLegales(Jugador jugador) {
         Baraja barajaClon = jugador.getCartas().clone();
         Baraja barajaJugable = new Baraja();
         Carta cartaSeleccionada;
-        int indice;
-        int elixir = 0;
+        int indice, elixir = 0;
         do {
-            indice = PideInput.pedirIndice("Selecciona una carta", barajaClon, false);
+            indice = PideInput.pedirIndice("Selecciona una carta (elixir actual: " + elixir + "/10)", barajaClon, false);
             cartaSeleccionada = barajaClon.get(indice);
-            if (cartaSeleccionada.getElixir() + elixir <= 10) {
+            if (cartaSeleccionada.getElixir() + elixir <= MAX_ELIXIR) {
                 barajaJugable.add(cartaSeleccionada);
                 barajaClon.remove(cartaSeleccionada);
                 elixir = barajaJugable.getElixir();
@@ -119,7 +133,7 @@ public class StucomRoyal {
     }
 
     private static void mostrarRanking() {
-        List<Jugador> jugadores = manager.getJugadores();
+        List<Jugador> jugadores = MANAGER.getJugadores();
         Collections.sort(jugadores);
         for (int i = 0; i < jugadores.size(); i++) {
             System.out.println((i + 1) + ". " + jugadores.get(i));

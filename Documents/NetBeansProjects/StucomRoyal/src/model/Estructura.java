@@ -11,7 +11,7 @@ package model;
  */
 public class Estructura extends Carta {
 
-    private int escudo;
+    private final int escudo;
 
     public Estructura(String nombre) {
         super(nombre);
@@ -25,6 +25,4 @@ public class Estructura extends Carta {
         return super.toString() + "; Escudo: " + escudo;
     }
     
-    
-
 }

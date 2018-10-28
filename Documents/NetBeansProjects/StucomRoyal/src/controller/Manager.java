@@ -6,10 +6,10 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
+import java.util.function.Predicate;
 import main.PideInput;
 import model.Carta;
 import model.Estructura;
@@ -24,13 +24,30 @@ import model.Tropa;
 public class Manager {
 
     private static Manager instancia;
-    private List<Jugador> jugadores = new ArrayList<>();
     private List<Carta> cartas = new ArrayList<>();
-    private List<String> nombresCartaPorDefecto = new ArrayList<>();
     private Random genRandom = new Random();
 
+    private List<Jugador> jugadores = Arrays.asList(
+            new Jugador("Laura", "0"),
+            new Jugador("Alex", "0"),
+            new Jugador("Victor", "0")
+    );
+
+    private List<String> nombresCarta = Arrays.asList(
+            "Caballero", "Principe", "Rey", "Reina",
+            "Mago", "Duende", "Ogro", "Bruja"
+    );
+
     private Manager() {
-        genNombresCartaPorDefecto();
+        this.genCartas(10);
+        for (int i = 0; i < 3; i++) {
+            try {
+                jugadores.get(0).add(cartas.get(i));
+                jugadores.get(1).add(cartas.get(i + 3));
+                jugadores.get(2).add(cartas.get(i + 6));
+            } catch (Exception ex) {
+            }
+        }
     }
 
     public static Manager getInstancia() {
@@ -38,52 +55,6 @@ public class Manager {
             instancia = new Manager();
         }
         return instancia;
-    }
-
-    public void genData() {
-        genCartas(3, "Hechizo");
-        genCartas(3, "Estructura");
-        genCartas(3, "Tropa");
-        genJugadoresPorDefecto("0");
-    }
-
-    private void genNombresCartaPorDefecto() {
-        nombresCartaPorDefecto.add("Caballero");
-        nombresCartaPorDefecto.add("Principe");
-        nombresCartaPorDefecto.add("Rey");
-        nombresCartaPorDefecto.add("Reina");
-        nombresCartaPorDefecto.add("Mago");
-        nombresCartaPorDefecto.add("Duende");
-        nombresCartaPorDefecto.add("Ogro");
-        nombresCartaPorDefecto.add("Bruja");
-    }
-
-    private void genJugadoresPorDefecto(String contrasena) {
-        jugadores.add(new Jugador("Juan", contrasena));
-        jugadores.add(new Jugador("Alex", contrasena));
-        jugadores.add(new Jugador("Victor", contrasena));
-        jugadores.add(new Jugador("Pol", contrasena));
-        jugadores.add(new Jugador("Steven", contrasena));
-        jugadores.add(new Jugador("Nico", contrasena));
-        jugadores.add(new Jugador("Javi", contrasena));
-        jugadores.add(new Jugador("Darren", contrasena));
-    }
-
-    public void genCartas(int cantidad, String tipo) {
-        int random;
-        for (int i = 0; i < cantidad; i++) {
-            random = genRandom.nextInt(nombresCartaPorDefecto.size());
-            switch (tipo.toLowerCase()) {
-                case "hechizo":
-                    cartas.add(new Hechizo(nombresCartaPorDefecto.get(random)));
-                    break;
-                case "tropa":
-                    cartas.add(new Tropa(nombresCartaPorDefecto.get(random)));
-                    break;
-                case "estructura":
-                    cartas.add(new Estructura(nombresCartaPorDefecto.get(random)));
-            }
-        }
     }
 
     public List<Carta> getCartas() {
@@ -94,36 +65,38 @@ public class Manager {
         return jugadores;
     }
 
-    public Jugador autentificarJugador() {
-        Jugador jugador;
-        String user;
-        String pass;
-        boolean encontrado = false;
-        do {
-            user = PideInput.pedirCadena("Usuario: ");
-            pass = PideInput.pedirCadena("Contrasena: ");
-            jugador = new Jugador(user, pass);
-            for (Jugador j : jugadores) {
-                if (jugador.equals(j)) {
-                    jugador = j;
-                    encontrado = true;
-                }
+    public void genCartas(int cantidad) {
+        int random;
+        int tipo;
+        for (int i = 0; i < cantidad; i++) {
+            random = genRandom.nextInt(nombresCarta.size());
+            tipo = genRandom.nextInt(3);
+            switch (tipo) {
+                case 0:
+                    cartas.add(new Hechizo(nombresCarta.get(random)));
+                    break;
+                case 1:
+                    cartas.add(new Tropa(nombresCarta.get(random)));
+                    break;
+                case 2:
+                    cartas.add(new Estructura(nombresCarta.get(random)));
+                    break;
             }
-            if (!encontrado) {
-                System.err.println("Contraseña o usuario incorrectos!");
-            }
-        } while (!encontrado);
-        return jugador;
+        }
     }
 
-    public Jugador autentificarJugadorTresCartas() {
+    public Jugador authJugador(Predicate<Jugador> predicate, String error) {
         Jugador jugador;
         do {
-            jugador = autentificarJugador();
-            if (!jugador.canPlay()) {
-                System.err.println("El jugador debe tener al menos tres cartas con su suma de elixir de 10 maximo.");
+            Jugador temp = new Jugador(PideInput.pedirCadena("Usuario: "), PideInput.pedirCadena("Contrasena: "));
+            jugador = jugadores.stream()
+                    .filter(j -> j.equals(temp))
+                    .filter(predicate)
+                    .findFirst().orElse(null);
+            if (jugador == null) {
+                System.err.println(error);
             }
-        } while (!jugador.canPlay());
+        } while (jugador == null);
         return jugador;
     }
 

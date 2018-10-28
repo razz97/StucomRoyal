@@ -10,8 +10,8 @@ package model;
  * @author alex_bou
  */
 public class Hechizo extends Carta {
-    
-    private int alcance;
+
+    private final int alcance;
 
     public Hechizo(String nombre) {
         super(nombre);
@@ -19,10 +19,10 @@ public class Hechizo extends Carta {
         this.ataque = ataqueBase + alcance;
         this.defensa = defensaBase + alcance;
     }
-    
-        @Override
+
+    @Override
     public String toString() {
         return super.toString() + "; Alcance: " + alcance;
     }
-    
+
 }

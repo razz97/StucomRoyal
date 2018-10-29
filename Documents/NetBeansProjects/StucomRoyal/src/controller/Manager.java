@@ -18,7 +18,8 @@ import model.Jugador;
 import model.Tropa;
 
 /**
- *
+ * Esta clase sirve como controlador de la aplicacion, es la encargada de 
+ * gestionar y enviar los datos a la vista (StucomRoyal.java).
  * @author alex
  */
 public class Manager {
@@ -37,7 +38,11 @@ public class Manager {
             "Caballero", "Principe", "Rey", "Reina",
             "Mago", "Duende", "Ogro", "Bruja"
     );
-
+    
+    /**
+     * Constructor privado para que solo se pueda llamar desde getInstancia.
+     * Genera 10 cartas y añade unas cuantas a los jugadores.
+     */
     private Manager() {
         this.genCartas(10);
         for (int i = 0; i < 3; i++) {
@@ -49,7 +54,12 @@ public class Manager {
             }
         }
     }
-
+    
+    /**
+     * Dado que solo nos interesa tener un manager, este es el metodo a usar 
+     * para construirlo. Devuelve la instancia del Manager si existe y sino lo crea.
+     * @return instancia de Manager
+     */
     public static Manager getInstancia() {
         if (instancia == null) {
             instancia = new Manager();
@@ -60,11 +70,16 @@ public class Manager {
     public List<Carta> getCartas() {
         return cartas;
     }
-
+    
     public List<Jugador> getJugadores() {
         return jugadores;
     }
-
+    
+    /**
+     * Genera cartas de tipo aleatorio y las almacena en el manager,
+     * el parametro indica la cantidad de cartas a generar.
+     * @param cantidad de cartas.
+     */
     public void genCartas(int cantidad) {
         int random;
         int tipo;
@@ -84,7 +99,17 @@ public class Manager {
             }
         }
     }
-
+    /**
+     * Pide al usuario un nombre de usuario y una contraseña a partir del cual:
+     * - Comprueba que usuario y contraseña sean correctos
+     * - Comprueba que cumpla una condicion (predicate que indica el primer parametro)
+     * La funcion sigue pidiendo los datos hasta que se cumplan las dos condiciones.
+     * Cada vez que no se cumplan las condiciones se mostrara el mensaje de error del 
+     * segundo parametro.
+     * @param predicate
+     * @param error
+     * @return Jugador autentificado
+     */
     public Jugador authJugador(Predicate<Jugador> predicate, String error) {
         Jugador jugador;
         do {

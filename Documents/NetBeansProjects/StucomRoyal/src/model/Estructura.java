@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Representa una carta de tipo estructura, por lo que hereda de Carta.
  * @author alex_bou
  */
 public class Estructura extends Carta {

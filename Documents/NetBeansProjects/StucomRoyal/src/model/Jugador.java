@@ -10,7 +10,8 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
- *
+ * Esta clase sirve para representar a un jugador del juego.
+ * Implementa comparable para poder hacer el ranking por trofeos.
  * @author alex_bou
  */
 public class Jugador implements Comparable<Jugador> {
@@ -24,7 +25,13 @@ public class Jugador implements Comparable<Jugador> {
         this.username = username;
         this.password = password;
     }
-
+    
+    /**
+     * Determina si el jugador puede jugar a partir de la baraja de cartas que tiene.
+     * - Minimo tres cartas 
+     * - La suma de elixir de las tres cartas con menos elixir debe ser menor o igual a 10.
+     * @return 
+     */
     public boolean canPlay() {
         if (cartas.size() < 3) {
             return false;
@@ -49,22 +56,36 @@ public class Jugador implements Comparable<Jugador> {
     public Baraja getCartas() {
         return cartas;
     }
-
+    
+    /**
+     * Añade una carta a la baraja si el jugador tiene menos de 6.
+     * @param carta
+     * @throws Exception 
+     */
     public void add(Carta carta) throws Exception {
         if (cartas.size() >= 6) {
             throw new Exception("El jugador ya tiene 6 cartas.");
         }
         cartas.add(carta);
     }
-
+    
+    /**
+     * Suma los trofeos por ganar una batalla.
+     */
     public void ganar() {
         trofeos += 5;
     }
-    
+    /**
+     * Suma los trofeos por perder una batalla.
+     */
     public void perder() {
         trofeos++;
     }
-    
+    /**
+     * Comprueba que jugador debe empezar la batalla.
+     * @param j jugador con quien comparar.
+     * @return true si este objeto debe empezar, false si es el otro.
+     */
     public boolean isJugadorPrimero(Jugador j) {
         return compareTo(j) > 0;
     }

@@ -8,7 +8,8 @@ package model;
 import java.util.Random;
 
 /**
- *
+ * Clase abstracta que representa los campos y metodos comunes de todas las cartas. 
+ * Implementa Cloneable para poder ser clonada y Comparable para poder ordenar por su elixir.
  * @author alex_bou
  */
 public abstract class Carta implements Cloneable, Comparable<Carta> {
@@ -57,7 +58,12 @@ public abstract class Carta implements Cloneable, Comparable<Carta> {
     public int getDefensa() {
         return defensa;
     }
-
+    
+    /**
+     * Este metodo se usa cuando una carta es atacada, devuelve el dano inflingido.
+     * @param ataque
+     * @return int dano inflinjido a la carta.
+     */
     public int defender(int ataque) {
         int dano = ataque - defensa;
         if (dano > 0) {
@@ -68,13 +74,23 @@ public abstract class Carta implements Cloneable, Comparable<Carta> {
         return dano;
     }
 
+    /**
+     * Este metodo se usa cuando una carta ataca a otra, devuelve un String con  
+     * el desarrollo y resultado del ataque.
+     * @param c carta a la que atacar.
+     * @return String con
+     */
     public String atacar(Carta c) {
         String result = nombre + " (Ataque: " + ataqueBase + ") ataca a " + c.getStatsDef();
         result += " " + c.getNombre() + " pierde " + c.defender(ataque) + " de vida ";
         result += c.getVida() > 0 ? "y se queda con " + c.getVida() + " puntos de vida!" : " y muere!";
         return result;
     }
-
+    
+    /**
+     * Devuelve los stats relevantes para defender.
+     * @return String con stats de defensa.
+     */
     public String getStatsDef() {
         return nombre + " (Defensa: " + defensaBase + ", Vida: " + vida + ")";
     }

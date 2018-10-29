@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Clase contenedora de las cartas de un jugador, extiende de ArrayList para 
+ * poder ser tratada como una lista, pero con un atributo elixir.
+ * Implementa Cloneable para poder ser clonada.
  * @author alex
  */
 public class Baraja extends ArrayList<Carta> implements Cloneable {
@@ -27,11 +29,20 @@ public class Baraja extends ArrayList<Carta> implements Cloneable {
         elixir -= ((Carta) o).getElixir();
         return super.remove(o);
     }
-
+    
+    /**
+     * Decide si esta baraja tiene mas vida que la indicada por el parametro. 
+     * @param b baraja con la que comparar.
+     * @return boolean 
+     */
     public boolean masVidaQue(Baraja b) {
         return getVida() > b.getVida();
     }
-    
+    /**
+     * Calcula el total de vida de las cartas que componen la baraja,
+     * comprobando que no sea menor a 0, en cuyo caso devuelve 0.
+     * @return int con el total de vida
+     */
     public int getVida() {
         int vida = stream().mapToInt(c -> c.getVida() > 0 ? c.getVida() : 0).sum();
         return vida > 0 ? vida : 0;
@@ -41,7 +52,7 @@ public class Baraja extends ArrayList<Carta> implements Cloneable {
     public Baraja clone() {
         return (Baraja) super.clone();
     }
-
+    
     public int getElixir() {
         return elixir;
     }

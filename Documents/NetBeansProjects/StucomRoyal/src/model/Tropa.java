@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Representa una carta de tipo tropa, por lo que hereda de Carta.
  * @author alex_bou
  */
 public class Tropa extends Carta {

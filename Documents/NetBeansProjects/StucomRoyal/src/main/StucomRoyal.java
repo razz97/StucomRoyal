@@ -13,7 +13,7 @@ import model.Carta;
 import model.Jugador;
 
 /**
- *
+ * Clase encargada de la vista del programa. Contiene el metodo main.
  * @author alex
  */
 public class StucomRoyal {
@@ -54,6 +54,9 @@ public class StucomRoyal {
         } while (opcion != 0);
     }
 
+    /**
+     * Pide los datos al usuario para añadir cartas.
+     */
     private static void conseguirCartas() {
         List<Carta> cartas = MANAGER.getCartas();
         Jugador jugador = MANAGER.authJugador(j -> true, "Datos incorrectos");
@@ -74,6 +77,11 @@ public class StucomRoyal {
         } while (option != -1);
     }
 
+    /**
+     * Comprueba si se puede realizar una batalla, pide los datos necesarios 
+     * al usuario para empezar una batalla, comprueba quien tira primero, u
+     * sa ejecutarBatalla y muestra el ganador por pantalla. 
+     */
     private static void empezarBatalla() {
         if (MANAGER.dosJugadoresPuedenJugar()) {
             System.out.println("Login primer usuario");
@@ -103,7 +111,11 @@ public class StucomRoyal {
         }
 
     }
-
+    /**
+     * Realiza una batalla entre dos barajas.
+     * @param primero 
+     * @param segundo 
+     */
     private static void ejecutarBatalla(Baraja primero, Baraja segundo) {
         for (int i = 0; i < 3; i++) 
             System.out.println(primero.get(i).atacar(segundo.get(i)));
@@ -112,7 +124,12 @@ public class StucomRoyal {
         for (int i = 0; i < 3; i++) 
             System.out.println(segundo.get(i).atacar(primero.get(i)));
     }
-
+    
+    /**
+     * Consigue una baraja legal para realizar una batalla.
+     * @param jugador
+     * @return 
+     */
     private static Baraja getCartasLegales(Jugador jugador) {
         Baraja barajaClon = jugador.getCartas().clone();
         Baraja barajaJugable = new Baraja();
@@ -132,6 +149,9 @@ public class StucomRoyal {
         return barajaJugable;
     }
 
+    /**
+     * Muestra el ranking de los jugadores con mas trofeos.
+     */
     private static void mostrarRanking() {
         List<Jugador> jugadores = MANAGER.getJugadores();
         Collections.sort(jugadores);

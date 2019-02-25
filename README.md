@@ -1,3 +1,3 @@
 # StucomRoyal
 
-Review Inheritance M03
+Use of inheritance and java 8.
